@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GlassBots — Handholding Scorecard</title>
+<meta name="description" content="Two minutes, sixteen taps, nothing sent. Estimate your AI system's Health Score.">
+<link rel="icon" href="brand/favicon.ico">
+<style>
+  :root { --bg:#0f172a; --card:#1e293b; --ink:#f8fafc; --dim:#94a3b8;
+          --accent:#14b8a6; --warn:#f59e0b; --bad:#ef4444; --good:#22c55e; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink);
+         font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+         min-height:100vh; display:flex; flex-direction:column; align-items:center; }
+  .wrap { width:100%; max-width:560px; padding:24px 20px 60px; }
+  .brand { font-weight:700; letter-spacing:.5px; margin-bottom:28px; }
+  .brand span { color:var(--accent); }
+  .card { background:var(--card); border-radius:16px; padding:28px 24px;
+          box-shadow:0 10px 30px rgba(0,0,0,.35); }
+  h1 { font-size:26px; line-height:1.25; margin-bottom:12px; }
+  .sub { color:var(--dim); font-size:15px; line-height:1.55; margin-bottom:22px; }
+  .pill { display:inline-block; background:rgba(20,184,166,.12); color:var(--accent);
+          font-size:12px; font-weight:600; padding:4px 10px; border-radius:99px;
+          margin-bottom:14px; }
+  .opt { display:block; width:100%; text-align:left; background:#273449; color:var(--ink);
+         border:2px solid transparent; border-radius:12px; padding:15px 16px;
+         font-size:16px; margin-bottom:10px; cursor:pointer; transition:.15s; }
+  .opt:hover { border-color:var(--accent); }
+  .opt.sel { border-color:var(--accent); background:rgba(20,184,166,.15); }
+  .opt small { display:block; color:var(--dim); font-size:12.5px; margin-top:3px; }
+  .bar { height:6px; background:#273449; border-radius:99px; margin-bottom:10px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--accent); width:0; transition:.3s; }
+  .meta { display:flex; justify-content:space-between; color:var(--dim);
+          font-size:12.5px; margin-bottom:18px; }
+  .btn { display:inline-block; background:var(--accent); color:#04211d; border:0;
+         font-size:16px; font-weight:700; padding:14px 22px; border-radius:12px;
+         cursor:pointer; margin-top:6px; text-decoration:none; }
+  .ghost { background:transparent; color:var(--dim); border:0; font-size:13px;
+           cursor:pointer; padding:10px 0 0; text-decoration:underline; }
+  .tick { display:flex; align-items:flex-start; gap:12px; background:#273449;
+          border-radius:12px; padding:14px; margin-bottom:10px; cursor:pointer; }
+  .tick input { width:20px; height:20px; accent-color:var(--accent); margin-top:1px; }
+  .tick span { font-size:15px; line-height:1.4; }
+  .score { font-size:64px; font-weight:800; line-height:1; }
+  .band { font-size:19px; font-weight:700; margin:6px 0 4px; }
+  .verdict { color:var(--dim); margin-bottom:20px; line-height:1.5; }
+  .weak { background:#273449; border-left:4px solid var(--warn); border-radius:8px;
+          padding:12px 14px; margin-bottom:10px; }
+  .weak b { display:block; margin-bottom:2px; }
+  .weak span { color:var(--dim); font-size:14px; line-height:1.45; }
+  .fine { color:var(--dim); font-size:12.5px; line-height:1.5; margin-top:18px; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Glass<span>Bots</span></div>
+
+  <!-- INTRO -->
+  <div class="card" id="intro">
+    <span class="pill">Free · Anonymous · ~2 minutes</span>
+    <h1>What's your AI really costing you?</h1>
+    <p class="sub">Sixteen taps. No typing, no account, nothing sent anywhere —
+    the score is computed on your device and shown to you alone.
+    The same ten things our paid Diagnostic <em>measures</em>, this estimates
+    from your answers.</p>
+    <button class="btn" onclick="start()">Start</button>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="card hidden" id="q">
+    <div class="bar"><i id="prog"></i></div>
+    <div class="meta"><span id="qlabel"></span><button class="ghost" id="back" onclick="back()">Back</button></div>
+    <h1 id="qtext" style="font-size:20px"></h1>
+    <div style="height:12px"></div>
+    <div id="opts"></div>
+    <p class="fine" id="qhint"></p>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="card hidden" id="res">
+    <span class="pill">Your estimate</span>
+    <div class="score" id="score"></div>
+    <div class="band" id="band"></div>
+    <p class="verdict" id="verdict"></p>
+    <h1 style="font-size:16px;margin-bottom:10px">What's costing you most</h1>
+    <div id="weaks"></div>
+    <p class="sub" style="margin-top:16px">This is an estimate from taps, not a measurement.
+    The GlassBots Diagnostic measures the same ten things against your actual system,
+    with evidence — and tells you which findings are Verified versus Reported.</p>
+    <a class="btn" href="mailto:hello@glassbot.com?subject=Diagnostic%20booking">Book the Diagnostic — US$199 / AU$275</a>
+    <p class="fine">Nothing you tapped left your browser. No analytics run on this page.</p>
+    <button class="ghost" onclick="location.reload()">Start over</button>
+  </div>
+</div>
+
+<script>
+// Tier 0 instrument — questionnaire v3 questions (D-27 laws: taps only,
+// one concept each, 'not sure' always available and scores low).
+// Each question scores one check 0-10. Ten checks = /100.
+const QS = [
+ {id:"A1", check:"Handholding", text:"It's 9pm and the system needs your attention before it can finish something. How often is that your life?",
+  opts:[["Never — it finishes inside agreed limits",10],["Rarely — true exceptions only",8],["Weekly-ish",5],["Most evenings",2],["Every evening. Sometimes at dinner.",0]]},
+ {id:"A2", check:null, multi:true, text:"Tick every sentence you've said in the last month:",
+  opts:[["\u201CIt's 80% done.\u201D (it wasn't)"],["\u201CIt's faster if I just do it myself.\u201D"],["\u201CWhat did that cost us?\u201D"],["\u201CI had to redo it.\u201D"]]},
+ {id:"A3", check:"Completion", text:"Of the tasks you gave the system this month, how many finished properly with no fixing by you?",
+  opts:[["Almost all",9],["Most",7],["About half",5],["A few",2],["Almost none",0],["Honestly not sure",1]]},
+ {id:"A4", check:"Approval", text:"When the system can't do the next step, what does it do?",
+  opts:[["Tells me straight away",8],["Asks me what to do",7],["Keeps trying something else",4],["Goes quiet — I find out later",0],["Not sure",1]]},
+ {id:"A5", check:"IdleBurn", text:"Look at last month's AI bill. How much of it was work you actually asked for?",
+  opts:[["Almost all of it",9],["About half",6],["Hardly any",2],["I don't know what I'm paying for",1]]},
+ {id:"A6", check:"Visibility", text:"How do you know what your AI finished last week?",
+  opts:[["I keep a record I trust",10],["I ask the AI, and I trust its answer",6],["I ask the AI, but I'm not sure it tells me the truth",3],["I don't really know",0]]},
+ {id:"B1", check:"Done", text:"When the system finishes a task, who checks the result is correct before it counts as done?",
+  opts:[["The system checks itself and I trust that",10],["The system checks itself, but I still look",6],["I look at everything myself",2],["Nobody, really",0]]},
+ {id:"B2", check:"Done", text:"When you give the system instructions, does it follow them?",
+  opts:[["Always",9],["Usually",6],["Sometimes",3],["It makes excuses instead",0]]},
+ {id:"B3", check:"Invented", text:"Does the system run checks on itself? (maintenance scans, self-reviews, health checks)",
+  opts:[["Yes, and they're useful",10],["Yes, but I don't know what they do",3],["No",7],["Not sure",4]]},
+ {id:"B4", check:"Invented", text:"Does the system produce reports or updates that nobody reads?",
+  opts:[["Yes, several",0],["One or two",4],["No",9],["Not sure",3]]},
+ {id:"B5", check:"Invented", text:"Does the system run tasks on a schedule that YOU never asked for?",
+  opts:[["Yes, lots",0],["A few",5],["No",10],["Not sure",4]]},
+ {id:"B6", check:"Visibility", text:"Something the system produced looks wrong. How do you find out why?",
+  opts:[["I read a record I understand",10],["I ask the system and hope it's honest",5],["I go digging through technical things",3],["I ask a technical person",0]]},
+ {id:"B7", check:"Editable", text:"You want the system to behave differently (tone, steps, order). What does changing it take?",
+  opts:[["Me, minutes, editing a file",10],["Me, hours",6],["Someone technical",3],["A long fight with permissions or code",0]]},
+ {id:"B8", check:"Resilience", text:"If the system completely broke tonight, what happens tomorrow?",
+  opts:[["Tested backup — we restore",10],["Backup exists, never tested",4],["No backup — we'd rebuild",1],["Honestly, the business knowledge is gone",0]]},
+ {id:"B9", check:"LockIn", text:"Switching your AI provider (say, to a cheaper model):",
+  opts:[["A setting change",10],["A chore",6],["A project",3],["Impossible",0]]},
+ {id:"B10", check:"LockIn", text:"Do you know which countries your business data gets sent to?",
+  opts:[["Yes, exactly",10],["Roughly",4],["No",0]]},
+];
+
+const NAMES = {Handholding:"Handholding", Completion:"Completion", Approval:"Approval Drag",
+  IdleBurn:"Idle Burn", Done:"Definition of Done", Invented:"Invented Work",
+  Visibility:"Visibility", Editable:"Editability", Resilience:"Resilience", LockIn:"Lock-in & Exposure"};
+const HINTS = {Completion:"Work that stops quietly and nobody notices",
+  Handholding:"Your hours per finished piece of work", Approval:"Rules that block instead of protect",
+  IdleBurn:"Spend that isn't tied to work you asked for", Done:"No checkable meaning of 'finished'",
+  Invented:"Self-assigned busywork nobody consumes", Visibility:"Needing a developer to know why it did that",
+  Editable:"Every change needs technical skills", Resilience:"One failure away from losing it all",
+  LockIn:"Can't switch providers; data goes somewhere undisclosed"};
+
+let idx = -1, answers = {};
+function start(){ idx = 0; render(); }
+function back(){ if(idx>0){ idx--; render(); } else { idx=-1; show("intro"); } }
+function show(id){ for(const el of ["intro","q","res"]) document.getElementById(el).classList.add("hidden");
+  document.getElementById(id).classList.remove("hidden"); window.scrollTo(0,0); }
+
+function render(){
+  if(idx >= QS.length){ return results(); }
+  const q = QS[idx];
+  show("q");
+  document.getElementById("qlabel").textContent = (idx+1) + " of " + QS.length;
+  document.getElementById("prog").style.width = (idx/QS.length*100) + "%";
+  document.getElementById("qtext").textContent = q.text;
+  document.getElementById("qhint").textContent = "Not sure? Say so — not-knowing is a finding too.";
+  const box = document.getElementById("opts"); box.innerHTML = "";
+  q.opts.forEach((o, i) => {
+    const b = document.createElement("button");
+    b.className = "opt" + (answers[q.id]===i ? " sel" : "");
+    b.innerHTML = o[0] + (String(o[1]).length ? "" : "");
+    b.onclick = () => { answers[q.id] = i; idx++; render(); };
+    if(q.multi) b.style.display="none";
+    box.appendChild(b);
+  });
+  if(q.multi){
+    box.innerHTML = "";
+    q.opts.forEach((o, i) => {
+      const l = document.createElement("label"); l.className="tick";
+      const c = document.createElement("input"); c.type="checkbox";
+      const s = document.createElement("span"); s.textContent = o[0];
+      l.append(c, s); box.appendChild(l);
+    });
+    const done = document.createElement("button");
+    done.className = "btn"; done.textContent = "Continue";
+    done.onclick = () => {
+      answers[q.id] = [...box.querySelectorAll("input")].map(c=>c.checked);
+      idx++; render();
+    };
+    const skip = document.createElement("button");
+    skip.className="ghost"; skip.textContent="None of them — continue";
+    skip.onclick = () => { answers[q.id]=[]; idx++; render(); };
+    box.append(done, skip);
+  }
+}
+
+function results(){
+  const checks = {};
+  for(const q of QS){ if(q.check===null || q.multi) continue;
+    checks[q.check] = checks[q.check] || [];
+    checks[q.check].push(q.opts[answers[q.id]][1]);
+  }
+  const avg = a => Math.round(a.reduce((x,y)=>x+y,0)/a.length);
+  const mn  = a => Math.min(...a);
+  const score =
+      answers===null?0:
+      mn(checks.Handholding) + mn(checks.Completion) + mn(checks.Approval) +
+      mn(checks.IdleBurn)   + mn(checks.Done) + avg(checks.Invented) +
+      mn(checks.Visibility) + mn(checks.Editable) + mn(checks.Resilience) +
+      mn(checks.LockIn);
+
+  const bands = [[80,"Healthy","Maintain. You're in the top few percent — verify it yearly.","var(--good)"],
+                 [60,"Drifting","Fixable in place — but the trend matters more than the score.","var(--warn)"],
+                 [40,"Struggling","Partial rebuild territory. It's costing you more than it should.","var(--warn)"],
+                 [20,"Failing","Rebuild territory. Salvage the knowledge, not the machinery.","var(--bad)"],
+                 [0,"Abandoned","You already know. The question is what to start instead.","var(--bad)"]];
+  const b = bands.find(x => score >= x[0]);
+
+  document.getElementById("score").textContent = score;
+  const bandEl = document.getElementById("band");
+  bandEl.textContent = "/100 — " + b[1]; bandEl.style.color = b[3];
+  document.getElementById("verdict").textContent = b[2];
+
+  const weak = Object.entries(checks)
+      .map(([k,v]) => [k, k==="Invented" ? avg(v) : mn(v)])
+      .sort((x,y) => x[1]-y[1]).slice(0,3);
+  const box = document.getElementById("weaks"); box.innerHTML = "";
+  for(const [k,v] of weak){
+    const d = document.createElement("div"); d.className="weak";
+    const b2 = document.createElement("b"); b2.textContent = NAMES[k] + " — " + v + "/10";
+    const s2 = document.createElement("span"); s2.textContent = HINTS[k] || "";
+    d.append(b2, s2); box.appendChild(d);
+  }
+  show("res");
+}
+</script>
+</body>
+</html>

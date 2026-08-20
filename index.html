@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GlassBots — Measure your Handholding Ratio | Glass-box AI Systems</title>
+<meta name="description" content="Your AI system has a Handholding Ratio: the hours of human attention per finished piece of work. We measure it, score your system out of 100, and rebuild it as a transparent, folder-native workflow you own. Fixed-price Diagnostic. No access required.">
+<meta property="og:title" content="GlassBots — Trust is transparency.">
+<meta property="og:description" content="Your AI system has a Handholding Ratio. We measure it, score it out of 100, and fix it. Fixed-price Diagnostic — no access to your systems required.">
+<meta property="og:image" content="brand/og-image-1200x630.png">
+<link rel="icon" href="brand/favicon.ico">
+<style>
+  :root { --bg:#0f172a; --card:#1e293b; --card2:#273449; --ink:#f8fafc; --dim:#94a3b8;
+          --accent:#14b8a6; --accent2:#0d9488; --warn:#f59e0b; --line:#334155; }
+  * { box-sizing:border-box; margin:0; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--ink);
+         font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; line-height:1.6; }
+  a { color:var(--accent); }
+  .wrap { max-width:960px; margin:0 auto; padding:0 20px; }
+
+  /* topbar */
+  header { position:sticky; top:0; z-index:10; background:rgba(15,23,42,.92);
+           backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .bar { display:flex; align-items:center; justify-content:space-between; padding:12px 20px;
+         max-width:960px; margin:0 auto; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; }
+  .logo img { width:30px; height:30px; border-radius:6px; }
+  .logo span { color:var(--accent); }
+  .bar .cta { background:var(--accent); color:#04211d; font-weight:700; font-size:14px;
+              padding:9px 16px; border-radius:10px; text-decoration:none; white-space:nowrap; }
+
+  /* hero */
+  .hero { padding:72px 0 48px; text-align:center; }
+  .eyebrow { color:var(--accent); font-size:13px; font-weight:600; letter-spacing:1.5px;
+             text-transform:uppercase; margin-bottom:14px; }
+  h1 { font-size:clamp(30px, 5.4vw, 48px); line-height:1.15; font-weight:800;
+       max-width:760px; margin:0 auto 18px; }
+  .hero p.sub { color:var(--dim); font-size:17px; max-width:640px; margin:0 auto 28px; }
+  .hero p.sub b { color:var(--ink); }
+  .btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn { background:var(--accent); color:#04211d; font-weight:700; font-size:16px;
+         padding:15px 24px; border-radius:12px; text-decoration:none; }
+  .btn.ghost { background:transparent; color:var(--ink); border:2px solid var(--line); }
+  .micro { color:var(--dim); font-size:13px; margin-top:14px; }
+
+  /* math strip */
+  .math { background:var(--card); border:1px solid var(--line); border-radius:16px;
+          padding:26px 22px; margin:26px 0 0; text-align:center; }
+  .math .formula { font-size:clamp(17px,2.6vw,22px); font-weight:700; color:var(--ink); }
+  .math .formula em { color:var(--accent); font-style:normal; }
+  .math p { color:var(--dim); margin-top:10px; font-size:15px; }
+
+  section { padding:56px 0; border-top:1px solid var(--line); }
+  h2 { font-size:clamp(24px,3.6vw,32px); line-height:1.25; margin-bottom:10px; }
+  .lead { color:var(--dim); max-width:680px; margin-bottom:26px; font-size:16.5px; }
+  .lead b { color:var(--ink); }
+
+  /* pain mirror */
+  ul.pain { list-style:none; }
+  ul.pain li { background:var(--card); border:1px solid var(--line); border-radius:12px;
+               padding:16px 18px 16px 48px; margin-bottom:10px; position:relative; }
+  ul.pain li::before { content:"✓"; position:absolute; left:18px; top:15px;
+                       color:var(--warn); font-weight:800; }
+  .pain-note { color:var(--dim); font-size:15px; }
+  .pain-note b { color:var(--ink); }
+
+  /* glass box */
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+  @media (max-width:760px){ .cols { grid-template-columns:1fr; } }
+  pre.tree { background:#0b1222; border:1px solid var(--line); border-radius:12px;
+             padding:18px; font-size:13px; line-height:1.7; overflow-x:auto; color:#cbd5e1; }
+  pre.tree .c { color:#64748b; }
+  table.cmp { width:100%; border-collapse:collapse; font-size:14.5px; }
+  table.cmp th, table.cmp td { text-align:left; padding:10px 12px;
+    border-bottom:1px solid var(--line); }
+  table.cmp th { color:var(--dim); font-weight:600; }
+  table.cmp td:first-child { color:var(--dim); }
+  .callout { background:var(--card); border-left:4px solid var(--accent); border-radius:10px;
+             padding:16px 18px; margin-top:22px; font-weight:600; }
+  figure.infographic { margin:30px 0 0; text-align:center; }
+  figure.infographic img { max-width:min(560px,100%); border-radius:14px;
+         border:1px solid var(--line); }
+  figure.infographic figcaption { color:var(--dim); font-size:13.5px; margin-top:10px; }
+
+  /* cards */
+  .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:760px){ .cards { grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px;
+          padding:22px 20px; }
+  .card h3 { font-size:17px; margin-bottom:8px; }
+  .card p { color:var(--dim); font-size:14.5px; }
+
+  /* diagnostic block */
+  .diag { background:var(--card); border:1px solid var(--line); border-radius:18px;
+          padding:34px 28px; }
+  .diag ul.get { list-style:none; margin:0 0 24px; }
+  .diag ul.get li { padding:7px 0 7px 30px; position:relative; font-size:15.5px; }
+  .diag ul.get li::before { content:"→"; position:absolute; left:2px; color:var(--accent);
+                            font-weight:700; }
+  .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+  @media (max-width:760px){ .steps { grid-template-columns:1fr; } }
+  .step { background:var(--card2); border-radius:12px; padding:18px 16px; font-size:14px; }
+  .step b { display:block; color:var(--accent); font-size:13px; letter-spacing:1px;
+            text-transform:uppercase; margin-bottom:6px; }
+  .step span { color:var(--dim); display:block; margin-top:6px; font-size:13px; }
+  blockquote.sample { background:var(--card2); border-left:4px solid var(--warn);
+          border-radius:10px; padding:16px 18px; margin-bottom:24px; color:#e2e8f0;
+          font-size:15px; font-style:italic; }
+  .price { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+  .price .amount { font-size:38px; font-weight:800; color:var(--ink); }
+  .price .aud { color:var(--dim); font-size:16px; }
+  .founding { color:var(--dim); font-size:13.5px; margin-bottom:22px; }
+
+  ul.dont { list-style:none; }
+  ul.dont li { background:var(--card); border:1px solid var(--line); border-radius:12px;
+               padding:15px 18px; margin-bottom:10px; color:var(--dim); font-size:15px; }
+  ul.dont li b { color:var(--ink); display:block; margin-bottom:3px; }
+
+  .au { background:var(--card); border:1px solid var(--line); border-radius:14px;
+        padding:24px 22px; font-size:15px; color:var(--dim); }
+  .au b { color:var(--ink); }
+  .au .date { color:var(--warn); font-weight:700; }
+
+  .final { text-align:center; padding:72px 0 56px; }
+  .final h2 { margin-bottom:12px; }
+  .final p { color:var(--dim); max-width:560px; margin:0 auto 24px; }
+
+  footer { border-top:1px solid var(--line); padding:28px 0 40px; color:var(--dim);
+           font-size:13.5px; text-align:center; }
+  footer a { color:var(--dim); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="logo"><img src="brand/icon-192.png" alt="GlassBots">Glass<span>Bots</span></div>
+    <a class="cta" href="mailto:hello@glassbot.com?subject=Diagnostic%20booking">Book a Diagnostic</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero" id="top">
+    <div class="eyebrow">For businesses whose AI stopped behaving</div>
+    <h1>Every AI system has a Handholding Ratio.</h1>
+    <p class="sub">It's the hours of human attention it takes to get one finished piece of
+    work out of your system. A healthy system runs <b>under 2</b>. If yours is 10, you
+    don't have automation — you have <b>a very expensive employee who can't finish
+    anything without you</b>.</p>
+    <div class="btns">
+      <a class="btn" href="mailto:hello@glassbot.com?subject=Diagnostic%20booking">Book a Diagnostic — US$199 / AU$275</a>
+      <a class="btn ghost" href="scorecard.html">Take the 2-minute scorecard</a>
+    </div>
+    <p class="micro">Nothing to install. No access to grant. Nothing to send. Most Diagnostics deliver next business day.</p>
+
+    <div class="math">
+      <div class="formula">Your Ratio <em>×</em> your hourly cost <em>×</em> monthly volume <em>=</em> what the broken system costs you, every month.</div>
+      <p>It's usually a bigger number than our fee. That's the entire commercial argument, and it makes itself.</p>
+    </div>
+  </div>
+
+  <!-- PAIN MIRROR -->
+  <section id="pain">
+    <h2>Does this sound like your system?</h2>
+    <ul class="pain">
+      <li>You bought AI agents. They <b>negotiate instead of working</b> — every task comes back with questions, or stops at 80% and waits for you to push.</li>
+      <li>It <b>spends money while idle</b> — scheduled activity, self-checks, self-generated tasks you never asked for.</li>
+      <li>Someone spends their evenings <b>arguing with it</b> instead of running the business.</li>
+      <li>"It's basically done" has been the status for <b>three weeks</b>.</li>
+      <li>Nobody can tell you <b>why it produced that</b> — not without a developer and an afternoon.</li>
+    </ul>
+    <p class="pain-note" style="margin-top:16px">If two or more of those are true, the problem isn't the model.
+    <b>It's the architecture around it.</b> That's measurable, and it's fixable.</p>
+  </section>
+
+  <!-- GLASS BOX -->
+  <section id="glassbox">
+    <h2>Your workflow shouldn't be a black box with a dashboard bolted on.</h2>
+    <p class="lead">We build AI systems the way well-run infrastructure has always worked:
+    <b>numbered folders are the stages, plain files are the contracts, and "done" is a
+    fact a script can check</b> — not an opinion. Every step exists as a document anyone
+    on your team can open, read, and edit.</p>
+
+    <div class="cols">
+      <pre class="tree">invoices/
+├── shared/
+│   └── invoices.json      <span class="c">← material arrives</span>
+└── stages/
+    ├── 01_summarise/
+    │   ├── CONTEXT.md     <span class="c">← the contract:</span>
+    │   │                  <span class="c">   inputs, process, acceptance</span>
+    │   └── output/        <span class="c">← what it actually produced</span>
+    └── 02_dispatch/</pre>
+      <table class="cmp">
+        <tr><th>You want to…</th><th>Typical AI build</th><th>GlassBots</th></tr>
+        <tr><td>Change how a step behaves</td><td>Developer, code, redeploy</td><td>Edit a text file</td></tr>
+        <tr><td>See what happened yesterday</td><td>Build a dashboard</td><td>Open the folder</td></tr>
+        <tr><td>Prove a task finished</td><td>Ask someone</td><td>The acceptance check ran green</td></tr>
+        <tr><td>Explain a decision</td><td>Buy an explainability layer</td><td>There was never anything hidden</td></tr>
+        <tr><td>Hand it to a new hire</td><td>Weeks of undocumented context</td><td>Hand them the folder</td></tr>
+      </table>
+    </div>
+
+    <figure class="infographic">
+      <img src="assets/glassbots-icm-infographic.jpg" alt="How the GlassBots ICM system works — in one picture">
+      <figcaption>The whole idea in one picture.</figcaption>
+    </figure>
+
+    <div class="callout">We don't sell trust in a black box. We remove the box.</div>
+  </section>
+
+  <!-- ZERO LOCK-IN -->
+  <section id="ownership">
+    <h2>You own it. All of it. Including the right to fire us.</h2>
+    <div class="cards">
+      <div class="card"><h3>Your models, your accounts</h3>
+        <p>We configure your system to run on the AI providers you already pay for.
+        Switching providers is a configuration change, not a rebuild.</p></div>
+      <div class="card"><h3>Your files, your hardware</h3>
+        <p>The whole system is a folder on infrastructure you control. There's no
+        GlassBots platform to leave, because there's no GlassBots platform.</p></div>
+      <div class="card"><h3>Your exit, pre-written</h3>
+        <p>Every engagement ships with an offboarding pack: how to revoke our access
+        in one click, and how the system keeps running without us. Published before
+        you ask.</p></div>
+    </div>
+  </section>
+
+  <!-- DIAGNOSTIC -->
+  <section id="diagnostic">
+    <h2>Before anything gets built or fixed, it gets measured.</h2>
+    <div class="diag">
+      <p class="lead" style="margin-bottom:18px">A fixed-price assessment of your AI system:</p>
+      <ul class="get">
+        <li>A <b>Health Score out of 100</b> — ten checks, each scored, each with the evidence behind it</li>
+        <li>Your <b>Handholding Ratio</b>, in hours and in dollars</li>
+        <li>The <b>three biggest causes</b>, ranked, in one plain-English sentence each</li>
+        <li><b>What it costs to leave it alone</b> — monthly and annually</li>
+        <li>A findings report where every item is marked <b>Verified</b> (we measured it) or <b>Reported</b> (you told us) — nothing presented as measured when it was described</li>
+      </ul>
+
+      <div class="steps">
+        <div class="step"><b>1 · Two minutes, free</b>Run the scorecard on this site — computed in your browser, nothing sent, nothing stored.
+        <span>The safe first step costs you nothing, including data.</span></div>
+        <div class="step"><b>2 · Book at your comfort</b>Interview track: a structured call, NDA first, no files. Folder track: secure upload with a redaction guide — strip customer names; we don't need real data.
+        <span>Files deleted on a stated date.</span></div>
+        <div class="step"><b>3 · Decide with numbers</b>Same-day or next-business-day report and a proposal generated from the findings.
+        <span>Worth acting on even if you never hire us.</span></div>
+      </div>
+
+      <blockquote class="sample">Health Score: 31/100 — Failing. Handholding Ratio: 9.4 hours per completed
+      item. Top cause: your permission rules make stopping the safe choice — 84% of refused
+      actions were later approved unchanged, so the rules added delay without adding safety.</blockquote>
+
+      <div class="price"><span class="amount">US$199</span><span class="aud">AU$275 inc. GST</span></div>
+      <p class="founding">Foundation pricing. Includes two free follow-up diagnostic reviews — a
+      founding-client programme with an end date stated when you book.</p>
+      <a class="btn" href="mailto:hello@glassbot.com?subject=Diagnostic%20booking">Book the Diagnostic</a>
+      <p class="micro" style="margin-top:14px">Prefer to start free? <a href="scorecard.html">Take the scorecard</a> — anonymous, nothing stored.</p>
+    </div>
+  </section>
+
+  <!-- WHERE WE DON'T FIT -->
+  <section id="limits">
+    <h2>Where we don't fit</h2>
+    <p class="lead">We'd rather tell you now:</p>
+    <ul class="dont">
+      <li><b>Real-time, sub-second decisions.</b> Fraud scoring, ad bidding, high-frequency anything. Our architecture optimises for legibility, not latency.</li>
+      <li><b>Heavily regulated sectors.</b> Health, financial services, government. These need specialist compliance partners; we'll say so and point you at one where we can.</li>
+      <li><b>If nobody on your team can open a text file.</b> You don't need a developer — but you need one person willing to read.</li>
+      <li><b>If your system is actually fine.</b> Roughly one in five we assess is healthier than its owner fears. The Diagnostic will tell you that too.</li>
+    </ul>
+  </section>
+
+  <!-- AU -->
+  <section id="au">
+    <div class="au">
+      <b>For Australian businesses:</b> from <span class="date">10 December 2026</span>, amendments to the
+      Privacy Act require businesses subject to it to be able to explain decisions their automated
+      systems make about people. Most systems will answer that with an explainability layer added
+      after the fact. Ours answer it structurally: every decision step is a readable file with its
+      evidence attached — because it was never hidden in the first place. <i>(Scope depends on your
+      circumstances; we'll tell you plainly where it applies.)</i>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <div class="final" id="book">
+    <h2>Stop babysitting. Start measuring.</h2>
+    <p>One fixed price. One folder. One number that explains where your evenings went —
+    and what they're costing you.</p>
+    <div class="btns">
+      <a class="btn" href="mailto:hello@glassbot.com?subject=Diagnostic%20booking">Book a Diagnostic</a>
+      <a class="btn ghost" href="scorecard.html">Run the free scorecard</a>
+    </div>
+    <p class="micro">Not ready? Nothing you tap in the scorecard leaves your browser.</p>
+  </div>
+</div>
+
+<footer>
+  GlassBots · glassbot.com · Australian-registered, remote-first · AU + US<br>
+  hello@glassbot.com · <a href="#diagnostic">The Diagnostic</a> · <a href="#limits">Where we don't fit</a><br>
+  © 2026 GlassBots. "Done" is a fact, not an opinion.
+</footer>
+
+</body>
+</html>
