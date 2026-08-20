@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your folders won't tell you when work stopped. Ours do. — GlassBots</title>
+<meta name="description" content="The most expensive AI failure is the quiet one: a stage that stopped and nobody noticed for weeks. Why dashboards miss it, why it costs 5x the hours, and the one mechanism that makes it impossible.">
+<link rel="icon" href="brand/favicon.ico">
+<style>
+  :root { --bg:#0f172a; --card:#1e293b; --card2:#273449; --ink:#f8fafc; --dim:#94a3b8;
+          --accent:#14b8a6; --warn:#f59e0b; --bad:#ef4444; --good:#22c55e; --line:#334155; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink);
+         font-family:Georgia,"Times New Roman",serif; line-height:1.75; font-size:18px; }
+  .chrome { font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .wrap { max-width:680px; margin:0 auto; padding:28px 20px 80px; }
+  .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:44px;
+            font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .topbar a.home { color:var(--dim); text-decoration:none; font-weight:700; font-size:15px; }
+  .topbar a.home span { color:var(--accent); }
+  .kicker { color:var(--accent); font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+            font-size:12.5px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+            margin-bottom:14px; }
+  h1 { font-size:clamp(28px,5vw,38px); line-height:1.2; margin-bottom:18px; font-weight:800;
+       font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .byline { color:var(--dim); font-size:14px; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+            margin-bottom:38px; }
+  p { margin-bottom:22px; color:#dbe2ea; }
+  h2 { font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; font-size:23px;
+       margin:40px 0 14px; line-height:1.3; }
+  blockquote { border-left:3px solid var(--accent); margin:26px 0; padding:4px 0 4px 20px;
+               color:var(--ink); font-style:italic; font-size:18.5px; }
+  .svg-card { background:var(--card); border:1px solid var(--line); border-radius:14px;
+              padding:20px; margin:30px 0; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .cap { color:var(--dim); font-size:13px; text-align:center; margin-top:10px; }
+  ul { margin:0 0 22px 22px; color:#dbe2ea; }
+  li { margin-bottom:10px; }
+  .selfcheck { background:var(--card); border:1px solid var(--line); border-radius:14px;
+               padding:24px 22px; margin:30px 0; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .selfcheck h3 { font-size:16px; margin-bottom:12px; color:var(--accent); }
+  .selfcheck ol { margin-left:20px; font-size:15.5px; }
+  .selfcheck li { margin-bottom:8px; }
+  .cta-box { text-align:center; margin-top:44px; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .btn { display:inline-block; background:var(--accent); color:#04211d; font-weight:700;
+         font-size:16px; padding:15px 24px; border-radius:12px; text-decoration:none; }
+  .btn.ghost { background:transparent; color:var(--ink); border:2px solid var(--line); }
+  .cta-box p { color:var(--dim); font-size:14px; margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="wrap chrome">
+  <div class="topbar">
+    <a class="home" href="index.html">Glass<span>Bots</span></a>
+    <a class="home" href="index.html#diagnostic">The Diagnostic ↑</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="kicker">Teardown · No. 1</div>
+  <h1>Your folders won't tell you when work stopped.<br>Ours do.</h1>
+  <div class="byline chrome">GlassBots · August 2026 · 6 minute read</div>
+
+  <p>A content operation runs a nine-stage production pipeline. Research, game plan,
+  script, spec, voice-over, storyboard, render, package, publish — and a blog post
+  goes out automatically at the end. It works. For weeks it works. Then one week the
+  video goes out and the blog post doesn't. And nobody notices. <em>For three weeks.</em></p>
+
+  <p>When it was finally found, the fix took minutes. The finding took a month. That
+  ratio — minutes to fix, weeks to find — is the most expensive failure shape in AI
+  automation, and almost nobody has a name for it. We call it <b>the silent stall</b>,
+  and it is the single most common critical finding in every system we diagnose.</p>
+
+  <h2>Why the dashboard didn't save you</h2>
+
+  <p>Every automation platform has a status screen, and the status screen was green.
+  Green means <em>running</em>. It does not mean <em>finished</em>. A scheduled job
+  that errors quietly, a stage that returns "success" without producing its output
+  file, an agent that stops mid-task and politely reports progress — all of these
+  light up green.</p>
+
+  <blockquote>Status answers "is it executing?" Nobody's business runs on executing.
+  Businesses run on finished.</blockquote>
+
+  <p>The dashboard watches the machine. The business runs on the artifacts. Those are
+  different things, and the gap between them is where the weeks go missing.</p>
+
+  <div class="svg-card">
+    <svg viewBox="0 0 680 178" width="100%" xmlns="http://www.w3.org/2000/svg"
+         font-family="Segoe UI,Arial,sans-serif">
+      <text x="12" y="24" fill="#94a3b8" font-size="13" font-weight="700">WHAT THE DASHBOARD SAID</text>
+      <g>
+        <circle cx="28" cy="52" r="7" fill="#22c55e"/><circle cx="68" cy="52" r="7" fill="#22c55e"/>
+        <circle cx="108" cy="52" r="7" fill="#22c55e"/><circle cx="148" cy="52" r="7" fill="#22c55e"/>
+        <circle cx="188" cy="52" r="7" fill="#22c55e"/><circle cx="228" cy="52" r="7" fill="#22c55e"/>
+        <circle cx="268" cy="52" r="7" fill="#22c55e"/><circle cx="308" cy="52" r="7" fill="#22c55e"/>
+        <circle cx="348" cy="52" r="7" fill="#22c55e"/>
+        <text x="372" y="57" fill="#64748b" font-size="12.5">all stages: running</text>
+      </g>
+      <text x="12" y="106" fill="#94a3b8" font-size="13" font-weight="700">WHAT THE FOLDER KNEW</text>
+      <g>
+        <rect x="20"  y="120" width="28" height="26" rx="4" fill="rgba(34,197,94,.18)" stroke="#22c55e"/>
+        <rect x="56"  y="120" width="28" height="26" rx="4" fill="rgba(34,197,94,.18)" stroke="#22c55e"/>
+        <rect x="92"  y="120" width="28" height="26" rx="4" fill="rgba(34,197,94,.18)" stroke="#22c55e"/>
+        <rect x="128" y="120" width="28" height="26" rx="4" fill="rgba(34,197,94,.18)" stroke="#22c55e"/>
+        <rect x="164" y="120" width="28" height="26" rx="4" fill="rgba(34,197,94,.18)" stroke="#22c55e"/>
+        <rect x="200" y="120" width="28" height="26" rx="4" fill="rgba(34,197,94,.18)" stroke="#22c55e"/>
+        <rect x="236" y="120" width="28" height="26" rx="4" fill="none" stroke="#ef4444" stroke-dasharray="4 3"/>
+        <rect x="272" y="120" width="28" height="26" rx="4" fill="none" stroke="#ef4444" stroke-dasharray="4 3"/>
+        <rect x="308" y="120" width="28" height="26" rx="4" fill="none" stroke="#ef4444" stroke-dasharray="4 3"/>
+        <text x="352" y="138" fill="#ef4444" font-size="12.5" font-weight="700">stages 7–9: no output. ever.</text>
+        <text x="12" y="168" fill="#64748b" font-size="11.5">dashes = the artifact that should exist and doesn't</text>
+      </g>
+    </svg>
+    <p class="cap">Nine green lights. Six real outputs. Both statements were true for three weeks.</p>
+  </div>
+
+  <h2>Why "just check it" doesn't scale</h2>
+
+  <p>The obvious fix is a human checking. And that works — right up until the system
+  runs daily and the checking becomes the job. We've measured the pattern across
+  systems like this one: work that should take 45 minutes takes four hours, because
+  the operator is the completion detector. Every task needs a set of eyes on it.
+  Every stall is found by a person happening to look.</p>
+
+  <p>That has a name too. It's the <b>Handholding Ratio</b> — hours of human attention
+  per finished piece of work — and when it climbs past single digits, the "automation"
+  is a net loss with good branding.</p>
+
+  <h2>The fix is a sentence, not a platform</h2>
+
+  <p>Every stage of work declares, in advance, what <em>finished</em> looks like —
+  as a check a machine can run. Not "write the blog post." Rather: "the file
+  <b>output/blog-post.md</b> exists, is not empty, and contains today's date." Then
+  a small loop runs the work, checks the claim, and if it fails, re-runs with the
+  exact reason — <i>"missing file: blog-post.md"</i> — up to three attempts. Then
+  it tells a human precisely what's missing.</p>
+
+  <ul>
+    <li><b>Work cannot stop silently</b> — a missing artifact is a failed check, immediately.</li>
+    <li><b>Retrying is specific</b> — "the digest is missing two keys," never "try again."</li>
+    <li><b>Failure is loud and bounded</b> — three attempts, then a human is told exactly what's absent.</li>
+    <li><b>Every result carries its evidence</b> — which inputs, which model, which check passed, when.</li>
+  </ul>
+
+  <p>This is what we build, and it's why the word <i>done</i> appears in our contracts
+  as a test, not an opinion.</p>
+
+  <div class="selfcheck">
+    <h3>Ask your own system three questions, right now</h3>
+    <ol>
+      <li>List everything your AI finished last week. Can you — without asking the AI?</li>
+      <li>Pick one finished item. How do you <em>know</em> it finished, rather than stopped?</li>
+      <li>When a step dies quietly, what notices? If the answer is "me, eventually" — that's the finding.</li>
+    </ol>
+  </div>
+
+  <p>If two of those three made you uncomfortable, you already know your score's
+  shape. The free scorecard will put a number on it in two minutes. The Diagnostic
+  will measure it against your actual system, with evidence — and show you exactly
+  where the silent stalls live.</p>
+
+  <div class="cta-box">
+    <a class="btn" href="scorecard.html">Take the 2-minute scorecard</a>&nbsp;&nbsp;
+    <a class="btn ghost" href="sample-report.html">See a real sample report</a>
+    <p>Free, anonymous — nothing you tap leaves your browser.</p>
+  </div>
+</div>
+</body>
+</html>
