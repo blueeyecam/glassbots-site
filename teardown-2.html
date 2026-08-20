@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your AI is shouting at you. That's why you stopped listening. — GlassBots</title>
+<meta name="description" content="A real monitoring system sent 786 duplicate alerts in 14 days — 81% of all traffic, 96% in unbroken runs. Nobody read them. Here's why noisy alerts are worse than no alerts, and what to do about it.">
+<link rel="icon" href="brand/favicon.ico">
+<style>
+  :root { --bg:#0f172a; --card:#1e293b; --card2:#273449; --ink:#f8fafc; --dim:#94a3b8;
+          --accent:#14b8a6; --warn:#f59e0b; --bad:#ef4444; --line:#334155; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink);
+         font-family:Georgia,"Times New Roman",serif; line-height:1.75; font-size:18px; }
+  .chrome { font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .wrap { max-width:680px; margin:0 auto; padding:28px 20px 80px; }
+  .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:44px;
+            font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .topbar a.home { color:var(--dim); text-decoration:none; font-weight:700; font-size:15px; }
+  .topbar a.home span { color:var(--accent); }
+  .kicker { color:var(--accent); font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+            font-size:12.5px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+            margin-bottom:14px; }
+  h1 { font-size:clamp(26px,4.8vw,36px); line-height:1.2; margin-bottom:18px; font-weight:800;
+       font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .byline { color:var(--dim); font-size:14px; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+            margin-bottom:38px; }
+  p { margin-bottom:22px; color:#dbe2ea; }
+  h2 { font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; font-size:23px;
+       margin:40px 0 14px; line-height:1.3; }
+  blockquote { border-left:3px solid var(--accent); margin:26px 0; padding:4px 0 4px 20px;
+               color:var(--ink); font-style:italic; font-size:18.5px; }
+  .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:30px 0;
+               font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  @media (max-width:520px){ .stat-grid { grid-template-columns:1fr; } }
+  .stat { background:var(--card); border:1px solid var(--line); border-radius:14px;
+          padding:22px 18px; text-align:center; }
+  .stat .n { font-size:38px; font-weight:800; color:var(--bad); line-height:1; margin-bottom:6px; }
+  .stat .l { font-size:13px; color:var(--dim); }
+  ul { margin:0 0 22px 22px; color:#dbe2ea; }
+  li { margin-bottom:10px; }
+  .selfcheck { background:var(--card); border:1px solid var(--line); border-radius:14px;
+               padding:24px 22px; margin:30px 0; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .selfcheck h3 { font-size:16px; margin-bottom:12px; color:var(--accent); }
+  .selfcheck ol { margin-left:20px; font-size:15.5px; }
+  .selfcheck li { margin-bottom:8px; }
+  .cta-box { text-align:center; margin-top:44px; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .btn { display:inline-block; background:var(--accent); color:#04211d; font-weight:700;
+         font-size:16px; padding:15px 24px; border-radius:12px; text-decoration:none; }
+  .btn.ghost { background:transparent; color:var(--ink); border:2px solid var(--line); }
+  .cta-box p { color:var(--dim); font-size:14px; margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="wrap chrome">
+  <div class="topbar">
+    <a class="home" href="index.html">Glass<span>Bots</span></a>
+    <a class="home" href="index.html#diagnostic">The Diagnostic ↑</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="kicker">Teardown · No. 2</div>
+  <h1>Your AI is shouting at you.<br>That's why you stopped listening.</h1>
+  <div class="byline chrome">GlassBots · August 2026 · 5 minute read</div>
+
+  <p>A monitoring system on a production AI platform had a bug. A price-tracking
+  alert, when a stock was near a trigger, would re-send the same "price is
+  approaching trigger" message on every scheduled run — for as long as the
+  price stayed near it. The function had no state, no memory, no cooldown.
+  It didn't know it had already told you.</p>
+
+  <p>Over fourteen days, it sent <b>786 messages</b>. That was 81% of all
+  alert traffic on the platform. 96% of them came in unbroken runs of three
+  or more — the same line, repeated, over and over, until the recipient's
+  brain filed the entire channel as noise.</p>
+
+  <div class="stat-grid">
+    <div class="stat"><div class="n">786</div><div class="l">messages in 14 days</div></div>
+    <div class="stat"><div class="n">81%</div><div class="l">of ALL alert traffic</div></div>
+    <div class="stat"><div class="n">96%</div><div class="l">in unbroken runs of 3+</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">people reading them by day 3</div></div>
+  </div>
+
+  <p>The fix was easy: a cooldown, a state flag, a check that says "I already
+  sent this." Five lines of code. But the fix isn't the story. <b>The story
+  is that nobody noticed for two weeks.</b></p>
+
+  <h2>Noisy alerts are worse than no alerts</h2>
+
+  <p>Here's the mechanism that makes this worse than silence: when an alert
+  system is noisy, the human learns to ignore the channel. Not the specific
+  alert — the <em>channel</em>. Telegram, email, the dashboard, the Slack
+  bot. Once your brain has classified a channel as "mostly noise," you stop
+  checking it. Then the real alert — the one that matters — arrives on the
+  same channel. And you miss it.</p>
+
+  <blockquote>A monitoring system that sends 786 duplicate alerts is not
+  over-reporting. It is training its operator to ignore it.</blockquote>
+
+  <p>This is a security principle dressed as an operations lesson: an alarm
+  that fires constantly is not an alarm. It's wallpaper. The most dangerous
+  monitoring system is not the one that fails silently — it's the one that
+  <em>succeeds</em> so loudly that real signal drowns.</p>
+
+  <h2>Why the AI did this to itself</h2>
+
+  <p>The monitoring function was stateless. It had no memory of what it had
+  already said. Every scheduled run was a fresh start: "is the price near
+  the trigger? Yes. Alert." It didn't know it had alerted 47 times
+  yesterday. It didn't know the recipient had stopped reading.</p>
+
+  <p>This is the same failure that makes AI agents stall silently — no
+  definition of "already done." The monitoring version is louder but
+  equally blind: <b>no definition of "already said."</b></p>
+
+  <h2>The three rules that fix it</h2>
+
+  <ul>
+    <li><b>Cooldown.</b> The same alert cannot fire again within a time
+    window. If the price is still near the trigger in 30 minutes, that's
+    the same alert. Suppress it.</li>
+    <li><b>State change.</b> An alert fires only when something
+    <em>changes</em> — "price crossed the trigger" not "price is near the
+    trigger." Proximity is continuous; crossings are events.</li>
+    <li><b>Repetition is the alarm.</b> The monitoring system itself needs
+    a watchdog: if any alert fires 3+ times in an unbroken run, that's a
+    finding. Not "the system is working" — "the system is stuck."</li>
+  </ul>
+
+  <p>The third rule is the one almost nobody implements. It requires the
+  system to monitor its own monitoring — and to treat <em>its own
+  repetition</em> as a fault, not as evidence of vigilance.</p>
+
+  <div class="selfcheck">
+    <h3>Ask your own system, right now</h3>
+    <ol>
+      <li>How many alerts did you receive from your AI system last week?</li>
+      <li>How many of those did you actually read past the subject line?</li>
+      <li>Is there a channel you've muted or filter to a folder you never open?</li>
+    </ol>
+    <p style="font-size:14px;color:var(--dim);margin-top:10px">If question 3
+    made you wince, you already know what the free scan will find.</p>
+  </div>
+
+  <p>Our Diagnostic checks for exactly this pattern: unbroken runs of
+  identical alerts, alert-to-signal ratios, and whether the monitoring
+  system monitors itself. It's one of the ten checks — and in our testing,
+  it's one of the most common critical findings.</p>
+
+  <div class="cta-box">
+    <a class="btn" href="scan.html">Get a free scan</a>&nbsp;&nbsp;
+    <a class="btn ghost" href="scorecard.html">Take the 2-minute scorecard</a>
+    <p>Your AI system has ten measurable health dimensions. Find out where yours stands.</p>
+  </div>
+</div>
+</body>
+</html>
