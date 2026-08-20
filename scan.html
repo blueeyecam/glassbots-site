@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free AI System Scan — GlassBots</title>
+<meta name="description" content="Send your AI system's folder. We'll scan it and send you your Health Score plus the three biggest causes — free, no access to your systems required.">
+<link rel="icon" href="brand/favicon.ico">
+<style>
+  :root { --bg:#0f172a; --card:#1e293b; --card2:#273449; --ink:#f8fafc; --dim:#94a3b8;
+          --accent:#14b8a6; --warn:#f59e0b; --line:#334155; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink);
+         font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; line-height:1.6; }
+  .wrap { max-width:680px; margin:0 auto; padding:40px 20px 80px; }
+  h1 { font-size:clamp(26px,4.5vw,36px); line-height:1.2; margin-bottom:14px; }
+  .pill { display:inline-block; background:rgba(20,184,166,.12); color:var(--accent);
+          font-size:12px; font-weight:700; padding:4px 12px; border-radius:99px;
+          margin-bottom:18px; }
+  .sub { color:var(--dim); font-size:16px; margin-bottom:30px; line-height:1.6; }
+  .sub b { color:var(--ink); }
+
+  .steps { margin:26px 0; }
+  .step { display:grid; grid-template-columns:36px 1fr; gap:14px; margin-bottom:18px;
+          align-items:start; }
+  .n { background:var(--accent); color:#04211d; font-weight:800; font-size:15px;
+       width:28px; height:28px; border-radius:50%; display:flex; align-items:center;
+       justify-content:center; }
+  .step h3 { font-size:15px; margin-bottom:3px; }
+  .step p { font-size:14px; color:var(--dim); }
+
+  .what { background:var(--card); border:1px solid var(--line); border-radius:14px;
+          padding:22px; margin:24px 0; }
+  .what h3 { font-size:15px; margin-bottom:12px; color:var(--accent); }
+  .what ul { list-style:none; }
+  .what li { font-size:14.5px; color:var(--dim); padding:6px 0 6px 24px; position:relative; }
+  .what li::before { content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+  .what li b { color:var(--ink); }
+
+  .not { background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.3);
+         border-radius:12px; padding:16px 18px; margin:20px 0; font-size:14px; color:var(--dim); }
+  .not b { color:var(--warn); }
+
+  .btn { display:inline-block; background:var(--accent); color:#04211d; font-weight:700;
+         font-size:17px; padding:16px 28px; border-radius:12px; text-decoration:none;
+         margin-top:10px; }
+  .fine { color:var(--dim); font-size:13px; margin-top:16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pill">Free · No access to your systems · 24-hour turnaround</div>
+  <h1>Send us your AI folder.<br>Get your Health Score back.</h1>
+
+  <p class="sub">You've taken the <a href="scorecard.html" style="color:var(--accent)">scorecard</a>
+  and you have a number you don't love. Now let us <b>measure it properly</b> — free.
+  We scan the actual files that run your AI system and send you your Health Score
+  plus the <b>three biggest causes</b>, in plain English, within one business day.</p>
+
+  <div class="steps">
+    <div class="step"><div class="n">1</div>
+      <div><h3>Zip your AI system's folder</h3>
+      <p>Whatever folder holds your agent configs, instructions, prompts, scripts.
+      If you're not sure what to include, the redaction guide below helps.</p></div></div>
+    <div class="step"><div class="n">2</div>
+      <div><h3>Strip anything sensitive</h3>
+      <p>Customer names, API keys, real data. Replace names with "CUSTOMER_A" etc.
+      The structural analysis doesn't need real data — and we provide a
+      one-page guide showing exactly what to remove.</p></div></div>
+    <div class="step"><div class="n">3</div>
+      <div><h3>Email it to us</h3>
+      <p>One email, one attachment. We scan it and send back your score within
+      24 hours (usually faster).</p></div></div>
+    <div class="step"><div class="n">4</div>
+      <div><h3>Read your score and decide</h3>
+      <p>If the number concerns you — and it usually does — the full Diagnostic
+      ($199) documents every finding with evidence and a remediation plan.
+      If not, you got a free health check and you're on your way.</p></div></div>
+  </div>
+
+  <div class="what">
+    <h3>What you get back (free)</h3>
+    <ul>
+      <li><b>Health Score out of 100</b> — the same ten checks, measured against your files</li>
+      <li><b>Your grade band</b> — Healthy / Drifting / Struggling / Failing / Abandoned</li>
+      <li><b>The three biggest causes</b> — one plain-English sentence each</li>
+      <li><b>Your cost of inaction</b> — what leaving it alone is costing you</li>
+    </ul>
+  </div>
+
+  <div class="not">
+    <b>What this is not:</b> it is not the full Diagnostic. It names the problem;
+    it doesn't solve it. The full report (every finding, evidence annex,
+    remediation workstreams, auto-generated proposal) is the $199 product —
+    and it's worth every cent if the free scan worries you.
+  </div>
+
+  <a class="btn" href="mailto:hello@glassbot.com?subject=Free%20Scan%20—%20workspace%20attached&body=Hi%20GlassBots%2C%0A%0AHere%27s%20my%20AI%20workspace%20folder%20for%20the%20free%20scan.%20I%27ve%20redacted%20customer%20names%20and%20removed%20API%20keys.%0A%0A—%20sent%20from%20glassbot.com/scan">Email your folder for the free scan</a>
+
+  <p class="fine">Files deleted on a stated date. No credentials requested, ever.
+  If you prefer a walkthrough first, take the <a href="scorecard.html" style="color:var(--accent)">2-minute scorecard</a>.</p>
+</div>
+</body>
+</html>
