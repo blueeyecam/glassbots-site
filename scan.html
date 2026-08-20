@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Free AI System Scan — GlassBots</title>
-<meta name="description" content="Send your AI system's folder. We'll scan it and send you your Health Score plus the three biggest causes — free, no access to your systems required.">
+<meta name="description" content="Send us your AI folder. We'll scan it and send you your Health Score plus the three biggest causes — free, no access to your systems required.">
 <link rel="icon" href="brand/favicon.ico">
 <style>
   :root { --bg:#0f172a; --card:#1e293b; --card2:#273449; --ink:#f8fafc; --dim:#94a3b8;
@@ -12,22 +12,43 @@
   * { box-sizing:border-box; margin:0; }
   body { background:var(--bg); color:var(--ink);
          font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; line-height:1.6; }
-  .wrap { max-width:680px; margin:0 auto; padding:40px 20px 80px; }
-  h1 { font-size:clamp(26px,4.5vw,36px); line-height:1.2; margin-bottom:14px; }
-  .pill { display:inline-block; background:rgba(20,184,166,.12); color:var(--accent);
-          font-size:12px; font-weight:700; padding:4px 12px; border-radius:99px;
-          margin-bottom:18px; }
-  .sub { color:var(--dim); font-size:16px; margin-bottom:30px; line-height:1.6; }
+  .wrap { max-width:680px; margin:0 auto; padding:24px 20px 80px; }
+
+  /* BIG brand header */
+  .brand-hero { text-align:center; margin-bottom:36px; }
+  .brand-hero img { width:100px; height:100px; border-radius:20px;
+                    box-shadow:0 8px 32px rgba(20,184,166,.25); margin-bottom:12px; }
+  .brand-hero .name { font-size:28px; font-weight:800; letter-spacing:-.5px; }
+  .brand-hero .name span { color:var(--accent); }
+  .brand-hero .tag { color:var(--dim); font-size:14px; margin-top:4px; }
+
+  h1 { font-size:clamp(26px,4.5vw,36px); line-height:1.2; margin-bottom:14px; text-align:center; }
+  .pill { display:inline-block; background:rgba(34,197,94,.12); color:#22c55e;
+          font-size:13px; font-weight:700; padding:5px 14px; border-radius:99px;
+          margin-bottom:18px; text-align:center; }
+  .sub { color:var(--dim); font-size:16px; margin-bottom:30px; line-height:1.6; text-align:center; }
   .sub b { color:var(--ink); }
 
-  .steps { margin:26px 0; }
-  .step { display:grid; grid-template-columns:36px 1fr; gap:14px; margin-bottom:18px;
-          align-items:start; }
-  .n { background:var(--accent); color:#04211d; font-weight:800; font-size:15px;
-       width:28px; height:28px; border-radius:50%; display:flex; align-items:center;
-       justify-content:center; }
-  .step h3 { font-size:15px; margin-bottom:3px; }
-  .step p { font-size:14px; color:var(--dim); }
+  /* the prompt box — the star of this page */
+  .prompt-box { background:#0b1222; border:2px solid var(--accent); border-radius:16px;
+                padding:24px; margin:28px 0; position:relative; }
+  .prompt-box::before { content:"COPY THIS PROMPT";
+    position:absolute; top:-12px; left:20px; background:var(--accent); color:#04211d;
+    font-size:11px; font-weight:800; letter-spacing:1px; padding:4px 12px; border-radius:99px; }
+  .prompt-box pre { font-size:13.5px; line-height:1.65; color:#e2e8f0; white-space:pre-wrap;
+                    font-family:"SF Mono",Consolas,monospace; padding-right:20px; }
+  .copy-btn { position:absolute; top:-12px; right:20px; background:var(--accent); color:#04211d;
+              border:0; font-size:12px; font-weight:700; padding:5px 14px; border-radius:99px;
+              cursor:pointer; }
+
+  .safety { background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.3);
+            border-radius:14px; padding:18px 20px; margin:24px 0; }
+  .safety h3 { font-size:14px; color:#22c55e; margin-bottom:10px; letter-spacing:.5px;
+               text-transform:uppercase; }
+  .safety ul { list-style:none; }
+  .safety li { font-size:14.5px; color:var(--dim); padding:5px 0 5px 26px; position:relative; }
+  .safety li::before { content:"🛡"; position:absolute; left:0; font-size:15px; }
+  .safety li b { color:var(--ink); }
 
   .what { background:var(--card); border:1px solid var(--line); border-radius:14px;
           padding:22px; margin:24px 0; }
@@ -44,61 +65,103 @@
   .btn { display:inline-block; background:var(--accent); color:#04211d; font-weight:700;
          font-size:17px; padding:16px 28px; border-radius:12px; text-decoration:none;
          margin-top:10px; }
-  .fine { color:var(--dim); font-size:13px; margin-top:16px; }
+  .fine { color:var(--dim); font-size:13px; margin-top:16px; text-align:center; }
+
+  /* time value framing */
+  .time-value { background:var(--card); border:1px solid var(--line); border-radius:14px;
+                padding:22px; margin:24px 0; text-align:center; }
+  .time-value h3 { font-size:16px; color:var(--ink); margin-bottom:12px; }
+  .time-value .formula { font-size:18px; font-weight:700; color:var(--accent); margin:10px 0; }
+  .time-value p { color:var(--dim); font-size:14.5px; line-height:1.55; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="pill">Free · No access to your systems · 24-hour turnaround</div>
-  <h1>Send us your AI folder.<br>Get your Health Score back.</h1>
 
-  <p class="sub">You've taken the <a href="scorecard.html" style="color:var(--accent)">scorecard</a>
+  <div class="brand-hero">
+    <img src="brand/icon-512.png" alt="GlassBots">
+    <div class="name">Glass<span>Bots</span></div>
+    <div class="tag">AI systems. Transparently engineered.</div>
+  </div>
+
+  <h1>Send us your AI folder.<br>Get your Health Score back.</h1>
+  <div style="text-align:center"><span class="pill">Free · Nothing to install · Nothing technical · 24 hours</span></div>
+
+  <p class="sub">You took the <a href="scorecard.html" style="color:var(--accent)">scorecard</a>
   and you have a number you don't love. Now let us <b>measure it properly</b> — free.
   We scan the actual files that run your AI system and send you your Health Score
   plus the <b>three biggest causes</b>, in plain English, within one business day.</p>
 
-  <div class="steps">
-    <div class="step"><div class="n">1</div>
-      <div><h3>Zip your AI system's folder</h3>
-      <p>Whatever folder holds your agent configs, instructions, prompts, scripts.
-      If you're not sure what to include, the redaction guide below helps.</p></div></div>
-    <div class="step"><div class="n">2</div>
-      <div><h3>Strip anything sensitive</h3>
-      <p>Customer names, API keys, real data. Replace names with "CUSTOMER_A" etc.
-      The structural analysis doesn't need real data — and we provide a
-      one-page guide showing exactly what to remove.</p></div></div>
-    <div class="step"><div class="n">3</div>
-      <div><h3>Email it to us</h3>
-      <p>One email, one attachment. We scan it and send back your score within
-      24 hours (usually faster).</p></div></div>
-    <div class="step"><div class="n">4</div>
-      <div><h3>Read your score and decide</h3>
-      <p>If the number concerns you — and it usually does — the full Diagnostic
-      ($199) documents every finding with evidence and a remediation plan.
-      If not, you got a free health check and you're on your way.</p></div></div>
+  <div class="prompt-box">
+    <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('prompt-text').textContent).then(()=>this.textContent='COPIED ✓')">COPY</button>
+    <pre id="prompt-text">I want you to help me prepare a folder for a free AI system health check by a company called GlassBots. Here's what I need you to do:
+
+1. Find the folder where my AI system lives. This is probably wherever my AI agent configs, instructions, prompts, or scripts are stored. Look for folders with files like CLAUDE.md, AGENTS.md, Context.md, or any folder where I've set up AI agents or automations.
+
+2. Make a COPY of that folder. Do NOT touch the original. Put the copy on my Desktop.
+
+3. Go through every file in the copy and REMOVE these things:
+   - Any API keys (they look like sk-..., sk-or-..., AKIA..., or long random strings near words like "key", "token", "secret", or "password")
+   - Any real customer names — replace them with "CUSTOMER_A", "CUSTOMER_B" etc.
+   - Any real email addresses — replace with "user@example.com"
+   - Any real phone numbers, addresses, or payment information
+   - Any passwords or login credentials of any kind
+
+4. Once every file is cleaned, compress the copy folder into a ZIP file on my Desktop.
+
+5. Tell me the file path of the ZIP file so I can attach it to an email.
+
+IMPORTANT: Do NOT send anything anywhere. Do NOT delete the original folder. Just prepare the cleaned copy and tell me where it is.</pre>
   </div>
 
-  <div class="what">
-    <h3>What you get back (free)</h3>
+  <p style="text-align:center;color:var(--dim);font-size:15px;margin:16px 0">
+    <b style="color:var(--ink)">That's it.</b> Paste that prompt into the AI you already use
+    (ChatGPT, Claude, Gemini — whatever you have). It finds your folder, makes a safe copy,
+    strips anything sensitive, and hands you a ZIP ready to send. No technical skills required.
+  </p>
+
+  <div class="safety">
+    <h3>🛡 Your safety, guaranteed</h3>
     <ul>
-      <li><b>Health Score out of 100</b> — the same ten checks, measured against your files</li>
-      <li><b>Your grade band</b> — Healthy / Drifting / Struggling / Failing / Abandoned</li>
-      <li><b>The three biggest causes</b> — one plain-English sentence each</li>
-      <li><b>Your cost of inaction</b> — what leaving it alone is costing you</li>
+      <li><b>No passwords.</b> We will never ask for one. Ever.</li>
+      <li><b>No access to your systems.</b> We scan a folder you send us. That's all we see.</li>
+      <li><b>No real customer data needed.</b> The scan works on structure, not on names.</li>
+      <li><b>Your files are deleted</b> on a date we state in writing. Not kept, not shared.</li>
+      <li><b>Nothing to install.</b> No software, no tools, no accounts to create.</li>
     </ul>
   </div>
 
-  <div class="not">
-    <b>What this is not:</b> it is not the full Diagnostic. It names the problem;
-    it doesn't solve it. The full report (every finding, evidence annex,
-    remediation workstreams, auto-generated proposal) is the $199 product —
-    and it's worth every cent if the free scan worries you.
+  <div class="what">
+    <h3>What you get back (free, within 24 hours)</h3>
+    <ul>
+      <li><b>Health Score out of 100</b> — measured against your actual files, not a guess</li>
+      <li><b>Your grade</b> — Healthy / Drifting / Struggling / Failing / Abandoned</li>
+      <li><b>The three biggest causes</b> — one plain-English sentence each. No jargon.</li>
+      <li><b>Your cost of inaction</b> — what leaving it alone is costing you every month</li>
+    </ul>
   </div>
 
-  <a class="btn" href="mailto:hello@glassbot.com?subject=Free%20Scan%20—%20workspace%20attached&body=Hi%20GlassBots%2C%0A%0AHere%27s%20my%20AI%20workspace%20folder%20for%20the%20free%20scan.%20I%27ve%20redacted%20customer%20names%20and%20removed%20API%20keys.%0A%0A—%20sent%20from%20glassbot.com/scan">Email your folder for the free scan</a>
+  <div class="time-value">
+    <h3>How much is your time worth?</h3>
+    <div class="formula">Your hours wasted per week × your hourly rate × 52 weeks</div>
+    <p>That's what the problem costs you per year. If your free scan shows a
+    Handholding Ratio above 5, you're paying for an employee who can't finish
+    anything without you. The full Diagnostic ($199) shows you exactly what to
+    fix — and our Build service fixes it so the problem <b>doesn't come back</b>.
+    Our Care Plan keeps it that way.</p>
+  </div>
 
-  <p class="fine">Files deleted on a stated date. No credentials requested, ever.
-  If you prefer a walkthrough first, take the <a href="scorecard.html" style="color:var(--accent)">2-minute scorecard</a>.</p>
+  <div class="not">
+    <b>The free scan names the problem.</b> The full Diagnostic ($199) solves it:
+    every finding with evidence, a remediation plan, and a proposal scoped from
+    the findings. That's the difference between "you're at 37" and "here's
+    exactly what to do about it."
+  </div>
+
+  <a class="btn" href="mailto:hello@glassbot.com?subject=Free%20Scan%20—%20workspace%20attached&body=Hi%20GlassBots%2C%0A%0AHere%27s%20my%20AI%20workspace%20for%20the%20free%20scan.%20My%20AI%20helped%20me%20clean%20it.%0A%0A—%20from%20glassbot.com/scan">Email your folder →</a>
+
+  <p class="fine">Free, no strings. Files deleted on a stated date. If you'd rather
+  just estimate first, take the <a href="scorecard.html" style="color:var(--accent)">2-minute scorecard</a>.</p>
 </div>
 </body>
 </html>
